@@ -23,6 +23,18 @@ endif()
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 add_subdirectory(material-base/sdsl-lite-turan)
 
+# Project library (MP2 deliverable code)
+add_library(miniproyecto2 STATIC
+    src/adjacency_list.cpp
+    src/graph_io.cpp
+)
+
+target_include_directories(miniproyecto2 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(miniproyecto2 PUBLIC sdsl k2tree_basic)
+
+add_executable(mp2_smoke src/smoke_main.cpp)
+target_link_libraries(mp2_smoke PRIVATE miniproyecto2)
+
 option(BUILD_MP2_TESTS "Build MP2 tests" ON)
 if(BUILD_MP2_TESTS)
     enable_testing()
