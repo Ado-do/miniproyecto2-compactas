@@ -3,3 +3,20 @@ input/*
 .vscode
 *.csv
 *.pdf
+
+# Material base (datasets grandes y clone sdsl)
+material-base/datasets/
+material-base/sdsl-lite-turan/
+
+# Representaciones comprimidas generadas
+cds/*
+!cds/.gitkeep
+!cds/README.md
+*.kt
+*.tr
+*.lv
+*.cil
+*.voc
+*.il
+
+.DS_Store

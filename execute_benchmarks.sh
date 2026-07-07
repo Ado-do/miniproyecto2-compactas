@@ -3,7 +3,10 @@ set -e
 
 ./compile.sh
 
-#./build/benchmarks/bench_patterns input/english.50MB
-#./build/benchmarks/bench_patterns input/dna.50MB
-#./build/benchmarks/bench_patterns input/xml.50MB
-#./build/benchmarks/bench_texts input/english.50MB input/dna.50MB input/xml.50MB
+if [[ -x build/mp2_smoke && -f material-base/datasets/graphs/tiger_map_hawaii.pg ]]; then
+    echo "* Smoke test (Hawaii)..."
+    ./build/mp2_smoke material-base/datasets/graphs/tiger_map_hawaii.pg
+else
+    echo "Benchmarks completos pendientes (Fase 5 del roadmap)."
+    echo "Ejecuta ./build/mp2_smoke <grafo.pg> para validar el build."
+fi
