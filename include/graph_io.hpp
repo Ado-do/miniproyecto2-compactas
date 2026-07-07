@@ -1,6 +1,7 @@
 #pragma once
 
 #include "adjacency_list.hpp"
+#include "components.hpp"
 
 #include <string>
 
@@ -18,5 +19,8 @@ PgGraph read_pg_graph(const std::string &path);
 
 /// Build an adjacency list, deduplicating undirected edges from directed pairs.
 AdjacencyList pg_to_adjacency_list(const PgGraph &pg);
+
+/// Read a `.pg` file and return one adjacency list per connected component.
+std::vector<ComponentGraph> read_pg_components(const std::string &path);
 
 } // namespace mp2

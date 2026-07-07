@@ -18,10 +18,12 @@ int main(int argc, char **argv) {
     try {
         const mp2::PgGraph pg = mp2::read_pg_graph(argv[1]);
         const mp2::AdjacencyList graph = mp2::pg_to_adjacency_list(pg);
+        const auto components = mp2::read_pg_components(argv[1]);
 
         std::cout << "mp2_smoke ok\n";
         std::cout << "vertices: " << graph.vertices() << '\n';
         std::cout << "edges: " << graph.edges() << '\n';
+        std::cout << "components: " << components.size() << '\n';
         std::cout << "adjacency_bytes: " << graph.size_bytes() << '\n';
         return 0;
     } catch (const std::exception &ex) {

@@ -14,6 +14,7 @@ void AdjacencyList::add_edge(std::uint32_t u, std::uint32_t v) {
     if (u == v) {
         return;
     }
+    const std::size_t before = adj_[u].size();
     auto insert_unique = [](std::vector<std::uint32_t> &list, std::uint32_t x) {
         if (std::find(list.begin(), list.end(), x) == list.end()) {
             list.push_back(x);
@@ -21,6 +22,9 @@ void AdjacencyList::add_edge(std::uint32_t u, std::uint32_t v) {
     };
     insert_unique(adj_[u], v);
     insert_unique(adj_[v], u);
+    if (adj_[u].size() > before) {
+        ++edge_count_;
+    }
 }
 
 void AdjacencyList::build_from_edges(std::size_t n,
@@ -31,14 +35,7 @@ void AdjacencyList::build_from_edges(std::size_t n,
         if (u >= n || v >= n) {
             throw std::out_of_range("edge references invalid vertex");
         }
-        if (u == v) {
-            continue;
-        }
-        const auto before_u = adj_[u].size();
         add_edge(u, v);
-        if (adj_[u].size() > before_u) {
-            ++edge_count_;
-        }
     }
 }
 
@@ -55,6 +52,13 @@ bool AdjacencyList::neighbors(std::uint32_t u, std::uint32_t v) const {
     }
     const auto &list = adj_[u];
     return std::find(list.begin(), list.end(), v) != list.end();
+}
+
+const std::vector<std::uint32_t> &AdjacencyList::adjacent(std::uint32_t v) const {
+    if (v >= adj_.size()) {
+        throw std::out_of_range("vertex id out of range");
+    }
+    return adj_[v];
 }
 
 std::size_t AdjacencyList::size_bytes() const {

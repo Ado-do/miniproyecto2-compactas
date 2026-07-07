@@ -23,6 +23,8 @@ public:
     std::size_t degree(std::uint32_t v) const;
     bool neighbors(std::uint32_t u, std::uint32_t v) const;
 
+    const std::vector<std::uint32_t> &adjacent(std::uint32_t v) const;
+
     /// Total bytes used by the representation (for space benchmarks).
     std::size_t size_bytes() const;
 

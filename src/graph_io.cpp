@@ -61,4 +61,10 @@ AdjacencyList pg_to_adjacency_list(const PgGraph &pg) {
     return graph;
 }
 
+std::vector<ComponentGraph> read_pg_components(const std::string &path) {
+    const PgGraph pg = read_pg_graph(path);
+    const AdjacencyList graph = pg_to_adjacency_list(pg);
+    return extract_components(graph);
+}
+
 } // namespace mp2
