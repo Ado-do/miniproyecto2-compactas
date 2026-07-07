@@ -31,6 +31,8 @@ add_library(miniproyecto2 STATIC
     src/k2_graph_io.cpp
     src/k2_tree.cpp
     src/k2_tree_bridge.c
+    src/planar_graph.cpp
+    src/pemb_graph.cpp
 )
 
 target_include_directories(miniproyecto2 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
