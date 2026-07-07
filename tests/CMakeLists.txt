@@ -29,3 +29,11 @@ add_test(
     NAME k2_tree
     COMMAND test_k2_tree "${CMAKE_SOURCE_DIR}"
 )
+
+add_executable(test_pemb_graph test_pemb_graph.cpp)
+target_link_libraries(test_pemb_graph PRIVATE miniproyecto2)
+
+add_test(
+    NAME pemb_graph
+    COMMAND test_pemb_graph "${CMAKE_SOURCE_DIR}"
+)

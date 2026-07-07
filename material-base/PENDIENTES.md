@@ -26,7 +26,7 @@ Ver fases en [ROADMAP.md](ROADMAP.md). Resumen:
 - [x] **Fase 1** — Parser `.pg` ✅, componentes conexas ✅, conversor k2-tree ✅
 - [x] **Fase 2** — **Lista de adyacencia propia** ✅
 - [x] **Fase 3** — Integración k2-tree **Basic** ✅ (Hawaii; grafos grandes en Fase 6)
-- [ ] **Fase 4** — Integración `pemb.hpp`
+- [x] **Fase 4** — Integración `pemb.hpp` ✅
 - [ ] **Fase 5** — Framework benchmarks (1000 ops, 30 repeticiones)
 - [ ] **Fase 6** — Experimentos completos en 3 grafos
 - [ ] **Fase 7** — Informe PDF
@@ -55,4 +55,4 @@ Ver fases en [ROADMAP.md](ROADMAP.md). Resumen:
 
 ## Próximo paso
 
-**Sprint 4:** Fase 4 — integración `pemb.hpp` → [ROADMAP.md](ROADMAP.md)
+**Sprint 5:** Fase 5 + Fase 6 — framework de benchmarks y experimentos → [ROADMAP.md](ROADMAP.md)

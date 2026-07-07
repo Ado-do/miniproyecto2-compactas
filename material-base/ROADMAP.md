@@ -118,17 +118,15 @@ Solo si Fases 0–6 con Basic están estables y queda tiempo antes del 8 julio.
 
 ## Fase 4 — Integración Extensión de Turán (`pemb.hpp`)
 
-- [ ] **4.1** Compilar `sdsl-lite-turan` como dependencia
-  - Integrar en CMake; resolver dependencias (`libstdc++`, etc.)
-- [ ] **4.2** Construir `pemb<>` desde `Graph` (embedding planar del `.pg`)
-  - Un `pemb` por componente conexa
-- [ ] **4.3** Wrapper operaciones
-  - `degree(v)`: `pe.degree(v)` (nativo en pemb)
-  - `neighbors(u, v)`: recorrer vecinos con `first(v)` + `next()` + `vertex(e)` hasta encontrar `u`, **o** implementar helper `adjacent(u,v)` documentado
-- [ ] **4.4** Medición de espacio: `sdsl::size_in_bytes(pe)` por componente
-- [ ] **4.5** Tests de correctitud vs lista de adyacencia (Hawaii + muestra en grafos grandes)
+- [x] **4.1** Compilar `sdsl-lite-turan` como dependencia (CMake raíz)
+- [x] **4.2** Construir `pemb<>` desde `Graph` (`planar_graph.hpp`, `pg_to_sdsl_graph`)
+- [x] **4.3** Wrapper operaciones (`PembGraph`: `degree`, `neighbors` vía embedding `Graph`)
+- [x] **4.4** Medición de espacio: `size_bytes()` → `sdsl::size_in_bytes(pe)`
+- [x] **4.5** Tests de correctitud (`test_pemb_graph` — enunciado, triangle, Hawaii)
 
-**Criterio de done:** pemb operativo en los 3 datasets; operaciones validadas.
+**Criterio de done:** pemb operativo en los 3 datasets; operaciones validadas. ✅ (Hawaii en tests; grafos grandes en Fase 6)
+
+> Nota: `pemb` modifica el `Graph` durante construcción; guardamos una copia fresca del embedding para queries. La API nativa `first/next/vertex` devolvió etiquetas incorrectas en grafos grandes — documentar en informe.
 
 ---
 
@@ -266,7 +264,7 @@ flowchart TD
 | ~~**S1**~~ | ~~Fase 1.2: componentes conexas~~ | ✅ hecho |
 | ~~**S2**~~ | ~~Fase 1.3: conversor k2-tree binario~~ | ✅ hecho |
 | ~~**S3**~~ | ~~Fase 2 + Fase 3 (lista adyacencia + k2-tree Hawaii)~~ | ✅ hecho |
-| **S4** | Fase 4 (pemb en Hawaii + grafos grandes) | 1–2 días |
+| ~~**S4**~~ | ~~Fase 4 (pemb en Hawaii + grafos grandes)~~ | ✅ hecho |
 | **S5** | Fase 5 + Fase 6 (benchmarks completos, CSVs, gráficos) | 1–2 días |
 | **S6** | Fase 7 + Fase 8 (informe + ZIP) | 1–2 días |
 | **S7** *(opcional)* | Quick win hybrid en Hawaii + tabla comparativa | 0.5–1 día |
