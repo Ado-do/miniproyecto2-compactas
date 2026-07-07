@@ -21,3 +21,11 @@ add_test(
     NAME adjacency_list
     COMMAND test_adjacency_list "${CMAKE_SOURCE_DIR}"
 )
+
+add_executable(test_k2_tree test_k2_tree.cpp)
+target_link_libraries(test_k2_tree PRIVATE miniproyecto2)
+
+add_test(
+    NAME k2_tree
+    COMMAND test_k2_tree "${CMAKE_SOURCE_DIR}"
+)
