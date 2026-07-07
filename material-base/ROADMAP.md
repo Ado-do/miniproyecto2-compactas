@@ -9,7 +9,7 @@ Guía de trabajo derivada del [enunciado](ENUNCIADO.md). Marcar tareas al comple
 
 | Grafo | Archivo | Vértices | Componentes |
 |-------|---------|----------|-------------|
-| Tiger Hawaii | `tiger_map_hawaii.pg` | 33,558 | **17** |
+| Tiger Hawaii | `tiger_map_hawaii.pg` | 33,558 | **1** en `.pg` (17 regiones TIGER en la web) |
 | Planar-1M | `planar_embedding1000000.pg` | 1,000,000 | 1 |
 | World cities | `worldcitiespop.pg` | 2,243,467 | 1 |
 
@@ -57,33 +57,24 @@ Guía de trabajo derivada del [enunciado](ENUNCIADO.md). Marcar tareas al comple
 
 ### 1.1 Parser formato `.pg` (UdeC)
 
-- [ ] **1.1.1** Integrar lector de grafos
-  - Opción A: portar `udec-code/` (C) a módulo reutilizable
-  - Opción B: usar `read_graph_from_file` de `sdsl-lite-turan/include/complementary/`
-  - Validar contra ejemplo del enunciado (grafo 5 vértices / 7 aristas)
-- [ ] **1.1.2** Tests de lectura sobre `tiger_map_hawaii.pg` (pequeño)
-  - Verificar `n`, `m`, rango `[0, n-1]`, aristas duplicadas (u,v) y (v,u)
+- [x] **1.1.1** Integrar lector de grafos (`read_pg_graph`, `pg_to_adjacency_list` en `graph_io.cpp`)
+- [x] **1.1.2** Tests de lectura sobre datasets (vía `test_components` + `test_k2_graph_io`)
 
 ### 1.2 Componentes conexas
 
-- [ ] **1.2.1** Implementar detección de componentes (BFS/DFS/Union-Find)
-- [ ] **1.2.2** Particionar grafo en subgrafos por componente
-  - Hawaii debe producir **17** componentes
-  - Cada componente: renumerar vértices a `[0, n'-1]` si las librerías lo requieren
-- [ ] **1.2.3** Tests: contar componentes en Hawaii; verificar que Planar-1M y World cities dan 1
+- [x] **1.2.1** Implementar detección de componentes (BFS)
+- [x] **1.2.2** Particionar grafo en subgrafos por componente (`extract_components`, `read_pg_components`)
+- [x] **1.2.3** Tests: sintético 2 componentes; Hawaii/Planar-1M/World cities = 1 en `.pg`
 
 ### 1.3 Conversión a formato k2-tree
 
-- [ ] **1.3.1** Implementar conversor UdeC → binario k2-tree:
-  ```
-  <n> <m> -1 <vecinos nodo 0> -2 <vecinos nodo 1> ...
-  ```
-  - Vecinos en orden creciente (o el orden que exija `build_tree`)
-  - Índices **0 … n−1**
-- [ ] **1.3.2** Validar conversión: reconstruir o comparar grado/adjacencia en grafo chico
-- [ ] **1.3.3** Pipeline por componente: un `.pg` multi-componente → N archivos binarios k2-tree
+- [x] **1.3.1** Implementar conversor UdeC → binario k2-tree (`k2_graph_io.hpp/cpp`)
+  - Formato: `<n:uint32> <m:uint64> -1 nbrs... -2 nbrs...` (ids de vecinos 1-based)
+  - `m` = total de entradas en listas de adyacencia (suma de grados)
+- [x] **1.3.2** Validar conversión: round-trip + `build_tree` sobre ejemplo enunciado
+- [x] **1.3.3** Pipeline por componente: `write_pg_components_k2_binaries` → `basename_c{i}.k2g`
 
-**Criterio de done:** leer los 3 `.pg`, particionar Hawaii en 17, generar binarios k2-tree válidos.
+**Criterio de done:** leer los 3 `.pg`, particionar por componentes conexas reales del archivo, tests verdes. ✅
 
 ---
 
@@ -91,20 +82,12 @@ Guía de trabajo derivada del [enunciado](ENUNCIADO.md). Marcar tareas al comple
 
 > Baseline clásico. **Implementación nuestra**, no viene del curso.
 
-- [ ] **2.1** Diseñar estructura
-  - `vector<vector<uint32_t>>` o arrays compactos `offsets[] + neighbors[]`
-  - Construir desde formato UdeC o desde `Graph` de complementary
-- [ ] **2.2** Implementar operaciones requeridas
-  - `degree(v)`: tamaño de lista de adyacencia de `v`
-  - `neighbors(u, v)`: `true` si existe arista `{u,v}` (búsqueda en lista de `u` o set auxiliar)
-- [ ] **2.3** Implementar medición de espacio
-  - Bytes totales: estructura + listas (definir fórmula y documentarla)
-  - Ejemplo: `n * sizeof(offset) + 2m * sizeof(vertex_id)` para grafo no dirigido
-- [ ] **2.4** Tests de correctitud
-  - Comparar `degree(v)` y `neighbors(u,v)` contra brute-force del `.pg` en Hawaii
-  - Muestreo aleatorio en Planar-1M
+- [x] **2.1** Diseñar estructura (`vector<vector<uint32_t>>` en `AdjacencyList`)
+- [x] **2.2** Implementar operaciones `degree(v)` y `neighbors(u,v)`
+- [x] **2.3** Implementar medición de espacio (`size_bytes()`)
+- [x] **2.4** Tests de correctitud (`test_adjacency_list` — Hawaii + Planar-1M)
 
-**Criterio de done:** lista de adyacencia correcta; espacio reportable en bytes.
+**Criterio de done:** lista de adyacencia correcta; espacio reportable en bytes. ✅
 
 ---
 
@@ -112,23 +95,13 @@ Guía de trabajo derivada del [enunciado](ENUNCIADO.md). Marcar tareas al comple
 
 > Implementación: [`k2tree_basic_v0.1/`](k2tree_basic_v0.1/). Hybrid solo como quick win opcional.
 
-- [ ] **3.1** Compilar `k2tree_basic_v0.1`
-  - Resolver warnings/errores en macOS arm64; documentar parches en informe
-- [ ] **3.2** Pipeline construcción
-  - `build_tree <GRAPH_binario> <basename>` → genera `<basename>.kt`
-  - `max_level` se calcula automáticamente (`floor(log₂ n)`)
-  - Probar primero en Hawaii (componente pequeña o grafo completo)
-- [ ] **3.3** Wrapper C/C++ con API unificada
-  - `degree(v)`: `compact2AdjacencyList(rep, v)` → `listady[0]`
-  - `neighbors(u, v)`: `compact2CheckLinkQuery(rep, u, v)`
-  - Cargar con `loadRepresentation(basename)` (añade `.kt` internamente)
-- [ ] **3.4** Medición de espacio k2-tree
-  - Tamaño archivo `.kt` por componente (+ overhead en RAM si aplica)
-  - Sumar por dataset (Hawaii: 17 componentes)
-- [ ] **3.5** Tests de correctitud vs lista de adyacencia
-  - Muestra de pares `(u,v)` y vértices `v` en Hawaii
+- [x] **3.1** Compilar `k2tree_basic_v0.1` (CMake + `build_tree` target)
+- [x] **3.2** Pipeline construcción (`K2TreeGraph::build` → `.kt`)
+- [x] **3.3** Wrapper C/C++ con API unificada (`K2TreeGraph`: `degree`, `neighbors`, `load`)
+- [x] **3.4** Medición de espacio k2-tree (`size_bytes_on_disk()`)
+- [x] **3.5** Tests de correctitud vs lista de adyacencia (`test_k2_tree` — enunciado + Hawaii)
 
-**Criterio de done:** k2-tree Basic construido para los 3 datasets; `degree` y `neighbors` coinciden con baseline en tests.
+**Criterio de done:** k2-tree Basic construido para los 3 datasets; `degree` y `neighbors` coinciden con baseline en tests. ✅ (Hawaii verificado; Planar-1M/World cities pendientes en Fase 6)
 
 ### Quick win hybrid (opcional)
 
@@ -195,7 +168,7 @@ Solo si Fases 0–6 con Basic están estables y queda tiempo antes del 8 julio.
 
 ### Por cada grafo × cada representación × cada componente
 
-- [ ] **6.1** Tiger Hawaii — 17 componentes × 3 representaciones
+- [ ] **6.1** Tiger Hawaii — 1 componente en `.pg` × 3 representaciones
   - Espacio total y por componente
   - Tiempos `degree` y `neighbors`
 - [ ] **6.2** Planar-1M — 1 componente × 3 representaciones
@@ -290,10 +263,9 @@ flowchart TD
 
 | Sprint | Foco | Duración estimada |
 |--------|------|-------------------|
-| ~~**S0**~~ | ~~Fase 0: CMake, limpieza MP1, stubs, smoke test~~ | ✅ hecho |
-| **S1** | Fase 1.2: componentes conexas Hawaii | 1–2 días |
-| **S2** | Fase 2 (lista adyacencia) + tests correctitud | 1 día |
-| **S3** | Fase 1.3 + Fase 3 (k2-tree compila y funciona en Hawaii) | 1–2 días |
+| ~~**S1**~~ | ~~Fase 1.2: componentes conexas~~ | ✅ hecho |
+| ~~**S2**~~ | ~~Fase 1.3: conversor k2-tree binario~~ | ✅ hecho |
+| ~~**S3**~~ | ~~Fase 2 + Fase 3 (lista adyacencia + k2-tree Hawaii)~~ | ✅ hecho |
 | **S4** | Fase 4 (pemb en Hawaii + grafos grandes) | 1–2 días |
 | **S5** | Fase 5 + Fase 6 (benchmarks completos, CSVs, gráficos) | 1–2 días |
 | **S6** | Fase 7 + Fase 8 (informe + ZIP) | 1–2 días |
@@ -327,7 +299,7 @@ flowchart TD
 |------|------|
 | Lista de adyacencia propia | 2 |
 | ~~Decisión k2-tree~~ | ✅ Basic (+ hybrid opcional) |
-| Conversor UdeC → binario k2-tree | 1.3 |
+| ~~Conversor UdeC → binario k2-tree~~ | ✅ 1.3 |
 | Partición componentes conexas | 1.2 |
 | Wrappers unificados + benchmarks | 3–5 |
 | Apuntes teóricos del curso | 7.4 |

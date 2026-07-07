@@ -26,7 +26,11 @@ add_subdirectory(material-base/sdsl-lite-turan)
 # Project library (MP2 deliverable code)
 add_library(miniproyecto2 STATIC
     src/adjacency_list.cpp
+    src/components.cpp
     src/graph_io.cpp
+    src/k2_graph_io.cpp
+    src/k2_tree.cpp
+    src/k2_tree_bridge.c
 )
 
 target_include_directories(miniproyecto2 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

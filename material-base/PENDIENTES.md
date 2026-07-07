@@ -23,9 +23,9 @@ Checklist de lo que **ya tenemos** vs lo que **aún falta**.
 Ver fases en [ROADMAP.md](ROADMAP.md). Resumen:
 
 - [x] **Fase 0** — k2-tree Basic, CMake unificado, scaffold MP1 eliminado (queda 0.4 integrantes)
-- [ ] **Fase 1** — Parser `.pg`, componentes conexas, conversor k2-tree
-- [ ] **Fase 2** — **Lista de adyacencia propia** (implementación nuestra)
-- [ ] **Fase 3** — Integración k2-tree **Basic** (+ quick win hybrid opcional)
+- [x] **Fase 1** — Parser `.pg` ✅, componentes conexas ✅, conversor k2-tree ✅
+- [x] **Fase 2** — **Lista de adyacencia propia** ✅
+- [x] **Fase 3** — Integración k2-tree **Basic** ✅ (Hawaii; grafos grandes en Fase 6)
 - [ ] **Fase 4** — Integración `pemb.hpp`
 - [ ] **Fase 5** — Framework benchmarks (1000 ops, 30 repeticiones)
 - [ ] **Fase 6** — Experimentos completos en 3 grafos
@@ -55,4 +55,4 @@ Ver fases en [ROADMAP.md](ROADMAP.md). Resumen:
 
 ## Próximo paso
 
-**Sprint 1:** Fase 1 — particionar Hawaii en 17 componentes → [ROADMAP.md](ROADMAP.md)
+**Sprint 4:** Fase 4 — integración `pemb.hpp` → [ROADMAP.md](ROADMAP.md)

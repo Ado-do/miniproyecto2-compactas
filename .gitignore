@@ -13,6 +13,7 @@ cds/*
 !cds/.gitkeep
 !cds/README.md
 *.kt
+*.k2g
 *.tr
 *.lv
 *.cil
