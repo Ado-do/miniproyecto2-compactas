@@ -30,7 +30,15 @@ K2TreeGraph::K2TreeGraph(mp2_k2_tree *tree, std::string basename)
 
 K2TreeGraph::~K2TreeGraph() = default;
 
-K2TreeGraph K2TreeGraph::build(const AdjacencyList &graph, const std::string &basename) {
+std::uint32_t K2TreeGraph::auto_max_level(const std::size_t vertices) {
+    if (vertices > UINT32_MAX) {
+        throw std::out_of_range("graph too large for k2-tree");
+    }
+    return mp2_k2_auto_max_level(static_cast<std::uint32_t>(vertices));
+}
+
+K2TreeGraph K2TreeGraph::build(const AdjacencyList &graph, const std::string &basename,
+                               const K2BuildOptions &options) {
     if (graph.vertices() > UINT32_MAX) {
         throw std::out_of_range("graph too large for k2-tree");
     }
@@ -39,9 +47,11 @@ K2TreeGraph K2TreeGraph::build(const AdjacencyList &graph, const std::string &ba
     std::vector<std::uint32_t> yedges;
     extract_directed_arcs(graph, xedges, yedges);
 
-    mp2_k2_tree *built = mp2_k2_build_from_arcs(
+    const int32_t max_level_override =
+        options.max_level.has_value() ? static_cast<int32_t>(*options.max_level) : -1;
+    mp2_k2_tree *built = mp2_k2_build_from_arcs_level(
         xedges.data(), yedges.data(), static_cast<std::uint32_t>(graph.vertices()),
-        static_cast<std::uint64_t>(xedges.size()), basename.c_str());
+        static_cast<std::uint64_t>(xedges.size()), basename.c_str(), max_level_override);
     if (built == nullptr) {
         throw std::runtime_error("failed to build k2-tree: " + basename);
     }
@@ -80,6 +90,10 @@ bool K2TreeGraph::neighbors(std::uint32_t u, std::uint32_t v) const {
     }
 
     return mp2_k2_neighbors(tree_.get(), u, v) != 0;
+}
+
+std::uint32_t K2TreeGraph::max_level() const {
+    return mp2_k2_max_level(tree_.get());
 }
 
 std::size_t K2TreeGraph::size_bytes_on_disk() const {

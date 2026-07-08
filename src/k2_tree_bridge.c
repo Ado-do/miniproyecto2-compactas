@@ -12,7 +12,7 @@ struct mp2_k2_tree {
     char *basename;
 };
 
-static uint32_t compute_max_level(uint32_t nodes) {
+uint32_t mp2_k2_auto_max_level(uint32_t nodes) {
     if (nodes <= 1) {
         return 0;
     }
@@ -43,9 +43,11 @@ static mp2_k2_tree *wrap_loaded(MREP *rep, const char *basename) {
     return tree;
 }
 
-mp2_k2_tree *mp2_k2_build_from_arcs(const uint32_t *xedges, const uint32_t *yedges, uint32_t nodes,
-                                    uint64_t arcs, const char *basename) {
-    const uint32_t max_level = compute_max_level(nodes);
+mp2_k2_tree *mp2_k2_build_from_arcs_level(const uint32_t *xedges, const uint32_t *yedges,
+                                          uint32_t nodes, uint64_t arcs, const char *basename,
+                                          int32_t max_level_override) {
+    const uint32_t max_level =
+        max_level_override < 0 ? mp2_k2_auto_max_level(nodes) : (uint32_t)max_level_override;
     MREP *built = compactCreateKTree((uint *)xedges, (uint *)yedges, nodes, (ulong)arcs, max_level);
     if (built == NULL) {
         return NULL;
@@ -60,6 +62,11 @@ mp2_k2_tree *mp2_k2_build_from_arcs(const uint32_t *xedges, const uint32_t *yedg
     }
 
     return wrap_loaded(loaded, basename);
+}
+
+mp2_k2_tree *mp2_k2_build_from_arcs(const uint32_t *xedges, const uint32_t *yedges, uint32_t nodes,
+                                    uint64_t arcs, const char *basename) {
+    return mp2_k2_build_from_arcs_level(xedges, yedges, nodes, arcs, basename, -1);
 }
 
 mp2_k2_tree *mp2_k2_load(const char *basename) {
@@ -87,6 +94,10 @@ uint32_t mp2_k2_vertices(const mp2_k2_tree *tree) {
 
 uint64_t mp2_k2_arcs(const mp2_k2_tree *tree) {
     return (uint64_t)tree->rep->numberOfEdges;
+}
+
+uint32_t mp2_k2_max_level(const mp2_k2_tree *tree) {
+    return (uint32_t)tree->rep->maxLevel;
 }
 
 uint32_t mp2_k2_degree(const mp2_k2_tree *tree, uint32_t vertex) {
