@@ -62,9 +62,9 @@ const std::vector<std::uint32_t> &AdjacencyList::adjacent(std::uint32_t v) const
 }
 
 std::size_t AdjacencyList::size_bytes() const {
-    std::size_t bytes = sizeof(*this) + adj_.capacity() * sizeof(std::vector<std::uint32_t>);
+    std::size_t bytes = sizeof(*this) + adj_.size() * sizeof(std::vector<std::uint32_t>);
     for (const auto &list : adj_) {
-        bytes += list.capacity() * sizeof(std::uint32_t);
+        bytes += list.size() * sizeof(std::uint32_t);
     }
     return bytes;
 }
