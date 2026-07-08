@@ -132,7 +132,7 @@ Comando: `./execute_benchmarks.sh k2-tune` (rango `[auto − 2, auto + 2]`, veri
 
 **Hallazgos:**
 
-1. **Niveles por debajo de `auto` suelen fallar** — `compactCreateKTree` llama `exit(-1)` internamente; el tuner aísla cada build en un subproceso (`fork`).
+1. **Niveles por debajo de `auto` fallan en k2-tree Basic** — la librería UdeC llama `exit(-1)` con mensaje `error: <n>` en stderr; no es un bug de nuestro wrapper. El tuner solo barre `[auto, auto + level_span]`.
 2. **En nuestros 3 grafos, el espacio en disco (`.kt`) fue idéntico** para todos los `max_level` válidos del rango probado.
 3. **Criterio de selección** (cuando el espacio empata): menor tiempo promedio de `degree` + `neighbors` (200 ops × 3 reps en tune).
 4. **Resultado:** en los tres casos el mejor nivel fue **`auto + 1`**.

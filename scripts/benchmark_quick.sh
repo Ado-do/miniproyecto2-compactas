@@ -27,12 +27,12 @@ if [[ ! -f "$HAWAII" ]]; then
     exit 1
 fi
 
-K2_LEVEL="$(read_k2_level "$HAWAII")"
-K2_FLAGS=()
-if [[ -n "$K2_LEVEL" ]]; then
-    K2_FLAGS=(--k2-max-level "$K2_LEVEL")
-fi
-
 rm -f "$OUT"
 ./build/mp2_smoke "$HAWAII"
-./build/mp2_bench "$HAWAII" --ops "$OPS" --reps "$REPS" --seed "$SEED" --out "$OUT" "${K2_FLAGS[@]}"
+
+K2_LEVEL="$(read_k2_level "$HAWAII")"
+BENCH_ARGS=(--ops "$OPS" --reps "$REPS" --seed "$SEED" --out "$OUT")
+if [[ -n "${K2_LEVEL:-}" ]]; then
+    BENCH_ARGS+=(--k2-max-level "$K2_LEVEL")
+fi
+./build/mp2_bench "$HAWAII" "${BENCH_ARGS[@]}"

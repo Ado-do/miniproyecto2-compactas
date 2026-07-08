@@ -8,7 +8,7 @@ GRAPHS_DIR="${GRAPHS_DIR:-material-base/datasets/graphs}"
 OPS="${OPS:-200}"
 REPS="${REPS:-3}"
 SEED="${SEED:-42}"
-LEVEL_SPAN="${LEVEL_SPAN:-4}"
+LEVEL_SPAN="${LEVEL_SPAN:-2}"
 OUT="${OUT:-results/k2_tune.csv}"
 BEST="${BEST:-results/k2_best_params.csv}"
 

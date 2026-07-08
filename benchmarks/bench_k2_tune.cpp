@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cstdint>
+#include <fcntl.h>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -120,6 +121,11 @@ bool build_k2_isolated(const mp2::AdjacencyList &adjacency, const std::string &b
 
     if (pid == 0) {
         close(pipefd[0]);
+        const int devnull = open("/dev/null", O_WRONLY);
+        if (devnull >= 0) {
+            dup2(devnull, STDERR_FILENO);
+            close(devnull);
+        }
         const auto t0 = std::chrono::high_resolution_clock::now();
         try {
             mp2::K2BuildOptions opts;
@@ -188,13 +194,13 @@ int main(int argc, char **argv) {
         const std::size_t m = adjacency.edges();
         const std::uint32_t auto_level = mp2::K2TreeGraph::auto_max_level(n);
 
-        const int lo = std::max(1, static_cast<int>(auto_level) - cfg.level_span);
+        const int lo = static_cast<int>(auto_level);
         const int hi = static_cast<int>(auto_level) + cfg.level_span;
 
         std::cout << "mp2_bench_k2_tune\n";
         std::cout << "graph: " << graph_name << "  n=" << n << "  m=" << m << '\n';
         std::cout << "k2 Basic: k=2 fixed | auto_max_level=" << auto_level << " | sweep [" << lo
-                  << ", " << hi << "]\n\n";
+                  << ", " << hi << "] (levels < auto fallan en k2-tree Basic)\n\n";
 
         std::vector<TuneRow> rows;
         rows.reserve(static_cast<std::size_t>(hi - lo + 1));
@@ -208,7 +214,7 @@ int main(int argc, char **argv) {
                 if (!build_k2_isolated(adjacency, basename, row.max_level, row.build_ms)) {
                     row.correct = false;
                     rows.push_back(row);
-                    std::cout << "  L=" << level << " build failed (invalid max_level?)\n";
+                    std::cout << "  L=" << level << " build failed (max_level invalido para este grafo)\n";
                     continue;
                 }
 

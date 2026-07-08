@@ -34,13 +34,13 @@ rm -f "$OUT"
 
 run_graph() {
     local graph="$1"
-    local extra_flags=("${@:2}")
+    shift
     if [[ ! -f "$graph" ]]; then
         echo "SKIP (no existe): $graph"
         return 0
     fi
     echo "=== Benchmark: $(basename "$graph") ==="
-    ./build/mp2_bench "$graph" --ops "$OPS" --reps "$REPS" --seed "$SEED" --out "$OUT" "${extra_flags[@]}"
+    ./build/mp2_bench "$graph" --ops "$OPS" --reps "$REPS" --seed "$SEED" --out "$OUT" "$@"
 }
 
 run_graph "$HAWAII" $(read_k2_level "$HAWAII")
