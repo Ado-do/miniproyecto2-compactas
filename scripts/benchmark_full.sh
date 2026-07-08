@@ -44,7 +44,7 @@ run_graph() {
 }
 
 run_graph "$HAWAII" $(read_k2_level "$HAWAII")
-run_graph "$PLANAR" $(read_k2_level "$PLANAR") --skip-pemb
-run_graph "$WORLD" $(read_k2_level "$WORLD") --skip-pemb
+run_graph "$PLANAR" $(read_k2_level "$PLANAR")
+run_graph "$WORLD" $(read_k2_level "$WORLD")
 
 echo "Resultados en $OUT"
