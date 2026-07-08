@@ -20,8 +20,8 @@ public:
     void add_edge(std::uint32_t u, std::uint32_t v);
     void build_from_edges(std::size_t n, const std::vector<std::pair<std::uint32_t, std::uint32_t>> &edges);
 
-    std::size_t degree(std::uint32_t v) const;
-    bool neighbors(std::uint32_t u, std::uint32_t v) const;
+    __attribute__((noinline)) std::size_t degree(std::uint32_t v) const;
+    __attribute__((noinline)) bool neighbors(std::uint32_t u, std::uint32_t v) const;
 
     const std::vector<std::uint32_t> &adjacent(std::uint32_t v) const;
 

@@ -64,12 +64,19 @@ inline void print_timing_row(const std::string &representation, const std::strin
               << " (batch " << stats.batch_mean_us << " +/- " << stats.batch_std_us << " us)\n";
 }
 
+template <typename T>
+inline void DoNotOptimize(const T& value) {
+    asm volatile("" : : "r,m"(value) : "memory");
+}
+
 template <typename Graph>
 inline mp2::bench::TimingStats bench_degree(const Graph &graph, const mp2::bench::QueryBatch &queries,
                                            std::size_t ops, std::size_t reps) {
     return mp2::bench::time_batch(ops, reps, [&] {
+        std::size_t sink = 0;
         for (const std::uint32_t v : queries.degree_vertices) {
-            (void)graph.degree(v);
+            sink += graph.degree(v);
+            DoNotOptimize(sink);
         }
     });
 }
@@ -78,8 +85,10 @@ template <typename Graph>
 inline mp2::bench::TimingStats bench_neighbors(const Graph &graph, const mp2::bench::QueryBatch &queries,
                                               std::size_t ops, std::size_t reps) {
     return mp2::bench::time_batch(ops, reps, [&] {
+        std::size_t sink = 0;
         for (const auto &[u, v] : queries.neighbor_pairs) {
-            (void)graph.neighbors(u, v);
+            sink += graph.neighbors(u, v) ? 1 : 0;
+            DoNotOptimize(sink);
         }
     });
 }

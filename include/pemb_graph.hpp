@@ -28,8 +28,8 @@ public:
 
     std::size_t vertices() const;
     std::size_t edges() const;
-    std::size_t degree(std::uint32_t v) const;
-    bool neighbors(std::uint32_t u, std::uint32_t v) const;
+    __attribute__((noinline)) std::size_t degree(std::uint32_t v) const;
+    __attribute__((noinline)) bool neighbors(std::uint32_t u, std::uint32_t v) const;
     std::size_t size_bytes() const;
 
 private:
