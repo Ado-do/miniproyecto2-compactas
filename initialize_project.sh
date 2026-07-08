@@ -2,7 +2,7 @@
 set -e
 
 echo "* Configurando build..."
-chmod +x compile.sh execute_benchmarks.sh execute_tests.sh plot.sh
+chmod +x compile.sh execute_benchmarks.sh execute_tests.sh plot.sh scripts/*.sh
 
 if [[ ! -d material-base/sdsl-lite-turan/include ]]; then
     echo "ERROR: falta material-base/sdsl-lite-turan (ver README.md)"
