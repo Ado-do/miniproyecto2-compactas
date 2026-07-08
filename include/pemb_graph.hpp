@@ -14,8 +14,6 @@ class Graph;
 
 namespace mp2 {
 
-/// Wrapper around sdsl `pemb<>` with the project graph API.
-/// Queries use the planar `Graph` embedding; space uses `size_in_bytes(pemb)`.
 class PembGraph {
 public:
     static PembGraph from_pg_file(const std::string &path);
@@ -38,7 +36,7 @@ private:
     PembGraph(std::unique_ptr<Graph> graph, std::unique_ptr<sdsl::pemb<>> pemb);
 
     std::unique_ptr<Graph> graph_;
-    std::unique_ptr<sdsl::pemb<>> pemb_;
+    mutable std::unique_ptr<sdsl::pemb<>> pemb_;
 };
 
 std::vector<PembGraph> read_pg_pemb_components(const std::string &path);
