@@ -87,6 +87,7 @@ int main(int argc, char **argv) {
     try {
         test_enunciado_example();
         test_dataset_if_present(graphs + "/tiger_map_hawaii.pg", "/tmp/mp2_k2_wrapper_hawaii");
+        test_dataset_if_present(graphs + "/planar_embedding1000000.pg", "/tmp/mp2_k2_wrapper_planar1m");
 
         std::cout << "test_k2_tree ok\n";
         return 0;

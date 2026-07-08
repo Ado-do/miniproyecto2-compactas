@@ -131,6 +131,7 @@ int main(int argc, char **argv) {
         test_two_component_extraction();
         test_triangle_pemb();
         test_dataset_if_present(graphs + "/tiger_map_hawaii.pg");
+        test_dataset_if_present(graphs + "/planar_embedding1000000.pg");
 
         std::cout << "test_pemb_graph ok\n";
         return 0;
