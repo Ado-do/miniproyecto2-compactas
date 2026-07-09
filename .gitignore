@@ -2,6 +2,9 @@ build*/
 input/*
 .vscode
 *.csv
+!results/benchmark_full.csv
+!results/k2_best_params.csv
+!results/k2_tune.csv
 *.pdf
 
 # Material base (datasets grandes y clone sdsl)
