@@ -5,6 +5,14 @@
 
 Comparación de representaciones compactas de grafos planares: **lista de adyacencia** (propia), **k2-tree Basic** y **extensión de Turán** (`pemb.hpp`).
 
+Se utilizarón los siguientes de grafos del [repositorio](https://www.inf.udec.cl/~jfuentess/datasets/graphs.php):
+
+- Planar 1M
+- Tiger - Hawaii
+- World cities
+
+Estos se descargan automaticamente con el script `./initialize_project.sh`.
+
 ## Estructura del repositorio
 
 ```
@@ -25,16 +33,6 @@ Comparación de representaciones compactas de grafos planares: **lista de adyace
 - CMake ≥ 3.15
 - Compilador C y C++17 (Clang en macOS arm64 probado)
 - Gnuplot (gráficos, fase experimental)
-
-### Dependencias locales (en `material-base/`)
-
-1. **k2-tree Basic** — incluido en el repo
-2. **sdsl-lite-turan** — clonar si no existe:
-   ```bash
-   git clone --depth 1 https://github.com/jfuentess/sdsl-lite.git material-base/sdsl-lite-turan
-   cd material-base/sdsl-lite-turan && git submodule update --init --recursive
-   ```
-3. **Datasets** — descargar según [`material-base/DATASETS.md`](material-base/DATASETS.md) o usar los `.pg` ya en `material-base/datasets/graphs/`
 
 ## Build
 
